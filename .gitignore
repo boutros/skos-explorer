@@ -1,0 +1,8 @@
+/.lein*
+/target
+/lib
+/classes
+/checkouts
+pom.xml
+*.jar
+*.class

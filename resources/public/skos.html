@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>SKOS-explorer</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='http://fonts.googleapis.com/css?family=Crimson+Text:400,400italic' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+
+    <div id="content-container">
+
+        <div id="current">
+          <h2>Concept: Fish</h2>
+          <p>&lt;skos-explorer/resources/public/skos.html&gt;<br/> <em>Last updated: xxx</em></p>
+          <label>Prefered label</label><div class="label">"Fish"@en<div class="circle"><p>&#9997;</p></div></div><div class="label">"Fisk"@no<div class="circle"><p>&#9997;</p></div></div><br/>
+          <label>Alternate labels<input type="text" value="" ><input type="text" value="" ></label><br/>
+          <label>Hidden labels<input type="text" value="" ></label><br/>
+          <label>Scope note<textarea rows="2" cols="50"></textarea></label>
+        </div>
+
+        <div class="link-box" id="broader">
+          <h3>broader concepts</h3>
+          <div class="link-box-inner">
+            <ul>
+              <li><a href="#">Animal</a><div class="circle right"><p>-</p></div>
+              <li><a href="#">Swimming thing</a><div class="circle right"><p>-</p></div>
+              <li><div class="circle"><p>+</p></div>
+            </ul>
+          </div>
+        </div>
+
+        <div class="link-box" id="related">
+          <h3>related concepts</h3>
+          <div class="link-box-inner">
+            <ul>
+              <li><a href="#"">Water</a><div class="circle right"><p>-</p></div>
+              <li><div class="circle"><p>+</p></div>
+            </ul>
+          </div>
+        </div>
+
+        <div class="link-box" id="narrower">
+          <h3>narrower concepts</h3>
+          <div class="link-box-inner">
+            <ul>
+              <li><a href="#"">Cod</a><div class="circle right"><p>-</p></div>
+              <li><a href="#"">Salmon</a><div class="circle right"><p>-</p></div>
+              <li><a href="#"">Flatfish</a><div class="circle right"><p>-</p></div>
+              <li><div class="circle"><p>+</p></div>
+            </ul>
+          </div>
+        </div>
+
+    </div>
+  </body>
+
+</html>
