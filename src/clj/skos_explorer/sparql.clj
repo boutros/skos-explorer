@@ -70,6 +70,14 @@
           (for [[k v] solution]
             [k (:value v)]))))
 
+(defn extract
+  "Extract selected variables from solutions. Return set of maps.
+
+    ex: (extract [:a :b :c] solutions)
+    => #{{:a 1} {:a 2} {:b 3} ..}"
+  [vars solutions]
+  (set (remove empty? (map #(select-keys % vars) solutions))))
+
 (defn concept
   "Returns concept bindings"
   [uri]
