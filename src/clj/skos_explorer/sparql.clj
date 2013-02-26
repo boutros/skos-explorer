@@ -34,7 +34,7 @@
                      :broader [:prefLabel] :broaderlabel
                      (filter (lang-matches (lang :broaderlabel) "en")))
            (optional uri [:related] :related \.
-                     :related [:preflabel] :relatedlabel
+                     :related [:prefLabel] :relatedlabel
                      (filter (lang-matches (lang :relatedlabel) "en")))
            (optional uri [:altLabel] :altlabel
                      (filter (lang-matches (lang :altlabel) "en")))
