@@ -16,28 +16,27 @@
 
 (defn get-concept
   "SPARQL-query to get relevant properites from a skos:Concept"
-  [id]
-  (let [uri (URI. (str "http://vocabulary.curriculum.edu.au/scot/" id))]
-    (query
-      (base (URI. "http://www.w3.org/2004/02/skos/core#"))
-      (select-distinct :preflabel :altlabel :hiddenlabel :scopenote :narrower
-                       :broader :related :modified)
-      (where uri a [:Concept] \;
-                 [:prefLabel] :preflabel \;
-                 [:dc :modified] :modified
-             (optional uri [:narrower] :narrower)
-             (optional uri [:broader] :broader)
-             (optional uri [:related] :related)
-             (optional uri [:altLabel] :altlabel)
-             (optional uri [:hiddenLabel] :hiddenlabel)
-             (optional uri [:scopeNote] :scopenote)
-             (filter (lang-matches (lang :preflabel) "en"))))))
+  [uri]
+  (query
+    (base (URI. "http://www.w3.org/2004/02/skos/core#"))
+    (select-distinct :preflabel :altlabel :hiddenlabel :scopenote :narrower
+                     :broader :related :modified)
+    (where uri a [:Concept] \;
+           [:prefLabel] :preflabel \;
+           [:dc :modified] :modified
+           (optional uri [:narrower] :narrower)
+           (optional uri [:broader] :broader)
+           (optional uri [:related] :related)
+           (optional uri [:altLabel] :altlabel)
+           (optional uri [:hiddenLabel] :hiddenlabel)
+           (optional uri [:scopeNote] :scopenote)
+           (filter (lang-matches (lang :preflabel) "en")))))
 
 (defn fetch
   "Perform SPARQL query"
-  [id]
+  [uri]
   (client/get endpoint
-              {:query-params {"query" (get-concept id)
+              {:query-params {"query" (get-concept uri)
                               "format" "application/sparql-results+json"}}))
 
 (defn bindings
@@ -57,3 +56,8 @@
   "Returns the solution maps from a sparql/json response."
   ;TODO
   )
+
+(defn concept
+  "Returns concept bindings"
+  [uri]
+  (bindings (fetch uri)))
