@@ -63,8 +63,12 @@
 
 (defn solutions
   "Returns the solution maps from a sparql/json response."
-  ;TODO
-  )
+  [response]
+  (for [solution
+        (->> response :body parse-string keywordize-keys :results :bindings)]
+    (into {}
+          (for [[k v] solution]
+            [k (:value v)]))))
 
 (defn concept
   "Returns concept bindings"
