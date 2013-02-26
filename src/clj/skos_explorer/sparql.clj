@@ -19,18 +19,27 @@
   [uri]
   (query
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
-    (select-distinct :preflabel :altlabel :hiddenlabel :scopenote :narrower
-                     :broader :related :modified)
+    (select-reduced :preflabel :altlabel :hiddenlabel :scopenote :comment
+                    :narrower :narrowerlabel :broader :broaderlabel
+                    :related :relatedlabel :modified)
     (where uri a [:Concept] \;
            [:prefLabel] :preflabel \;
            [:dc :modified] :modified
-           (optional uri [:narrower] :narrower)
-           (optional uri [:broader] :broader)
-           (optional uri [:related] :related)
-           (optional uri [:altLabel] :altlabel)
+           (filter (lang-matches (lang :preflabel) "en"))
+           (optional uri [:rdfs :comment] :comment)
+           (optional uri [:narrower] :narrower \.
+                     :narrower [:prefLabel] :narrowerlabel
+                     (filter (lang-matches (lang :narrowerlabel) "en")))
+           (optional uri [:broader] :broader \.
+                     :broader [:prefLabel] :broaderlabel
+                     (filter (lang-matches (lang :broaderlabel) "en")))
+           (optional uri [:related] :related \.
+                     :related [:preflabel] :relatedlabel
+                     (filter (lang-matches (lang :relatedlabel) "en")))
+           (optional uri [:altLabel] :altlabel
+                     (filter (lang-matches (lang :altlabel) "en")))
            (optional uri [:hiddenLabel] :hiddenlabel)
-           (optional uri [:scopeNote] :scopenote)
-           (filter (lang-matches (lang :preflabel) "en")))))
+           (optional uri [:scopeNote] :scopenote))))
 
 (defn fetch
   "Perform SPARQL query"
