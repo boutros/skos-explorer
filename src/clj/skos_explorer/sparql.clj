@@ -14,7 +14,7 @@
                       :owl "<http://www.w3.org/2002/07/owl#>"
                       :rdfs "<http://www.w3.org/2000/01/rdf-schema#>"})
 
-(defn get-concept
+(defn concept
   "SPARQL-query to get relevant properites from a skos:Concept"
   [uri]
   (query
@@ -42,11 +42,24 @@
            (optional uri [:hiddenLabel] :hiddenlabel)
            (optional uri [:scopeNote] :scopenote))))
 
+(defquery top-concepts
+  (select-distinct :concept :label)
+  (where :concept [:skos :topConceptOf] (URI. "http://vocabulary.curriculum.edu.au/scot") \;
+                  [:skos :prefLabel] :label
+          (filter (lang-matches (lang :label) "en"))))
+
 (defn fetch
   "Perform SPARQL query"
   [uri]
   (client/get endpoint
-              {:query-params {"query" (get-concept uri)
+              {:query-params {"query" (concept uri)
+                              "format" "application/sparql-results+json"}}))
+
+(defn fetch-top-concepts
+  "Returns the URIs of skos:topConcept"
+  []
+  (client/get endpoint
+              {:query-params {"query" (query top-concepts)
                               "format" "application/sparql-results+json"}}))
 
 (defn bindings
