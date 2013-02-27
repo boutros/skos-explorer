@@ -7,7 +7,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [compojure "1.1.5"]
                  [enlive "1.1.1"]
-                 [clj-http "0.6.3"]
+                 [clj-http "0.6.4"]
                  [cheshire "5.0.1"]
                  [matsu "0.1.0-SNAPSHOT"]]
   :plugins [[lein-ring "0.8.3"]
