@@ -15,8 +15,8 @@ ul                 { list-style: none; margin:0; padding:0;}
                      background-color: #efefef; overflow: hidden; }
 
 #current           { width: auto; height: 45%; overflow: hidden; margin:1%;}
-.properties        { width: 62%; float: left; font-size: 16px; margin-top:1em;}
-.links             { float: left; }
+.properties        { width: 65%; float: left; font-size: 16px; margin-top:1em;}
+.links             { float: left; margin-top:1em;}
 .label             { width: 120px; font-family: Arial; font-size:14px; font-weight: bold;
                      text-align: right; margin-right:2em; padding-top:4px;}
 .value             { width: 80%}

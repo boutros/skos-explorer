@@ -21,12 +21,13 @@
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
     (select-reduced :preflabel :altlabel :hiddenlabel :scopenote :comment
                     :narrower :narrowerlabel :broader :broaderlabel
-                    :related :relatedlabel :modified)
+                    :related :relatedlabel :modified :link)
     (where uri a [:Concept] \;
            [:prefLabel] :preflabel \;
            [:dc :modified] :modified
            (filter (lang-matches (lang :preflabel) "en"))
            (optional uri [:rdfs :comment] :comment)
+           (optional uri [:exactMatch] :link)
            (optional uri [:narrower] :narrower \.
                      :narrower [:prefLabel] :narrowerlabel
                      (filter (lang-matches (lang :narrowerlabel) "en")))

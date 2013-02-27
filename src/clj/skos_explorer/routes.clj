@@ -35,7 +35,10 @@
                                     (html/content n))
   [:#related :li] (html/clone-for [n (bindings :relatedlabel)]
                                     (html/content n))
-  [:#prefered :li] (html/content (->> bindings :preflabel first)))
+  [:#prefered :li] (html/content (->> bindings :preflabel first))
+  [:.links :p] (html/clone-for [n (bindings :link)]
+                               (html/content
+                                 {:tag :a, :attrs {:href n}, :content [n]})))
 
 (defroutes main-routes
   (GET "/" [] "index")
