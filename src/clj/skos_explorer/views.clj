@@ -21,23 +21,23 @@
   [:#updated] (html/content (->> bindings :modified first))
   [:#comment] (html/content (->> bindings :comment first))
   [:#scope] (html/content (->> bindings :scope first))
-  [:ul.narrower :li] (links narrower :narrower :narrowerlabel)
-  [:ul.related :li] (links related :related :relatedlabel)
+  [:ul.narrower :li.first] (links narrower :narrower :narrowerlabel)
+  [:ul.related :li.first] (links related :related :relatedlabel)
   [:#broader-or-top] (html/content
                        (if (some #(= (str uri) %) (map :concept topconcepts))
                          "other top concepts"
                          "broader concepts"))
-  [:ul.broader :li] (if (some #(= (str uri) %) (map :concept topconcepts))
+  [:ul.broader :li.first] (if (some #(= (str uri) %) (map :concept topconcepts))
                       (links (remove #(= (str uri) (:concept %)) topconcepts)
                              :concept :label)
                       (links broader :broader :broaderlabel))
-  [:#alternate :li] (html/clone-for [n (bindings :altlabel)]
+  [:#alternate :li.first] (html/clone-for [n (bindings :altlabel)]
                                     (html/content n))
-  [:#hidden :li] (html/clone-for [n (bindings :hiddenlabel)]
+  [:#hidden :li.first] (html/clone-for [n (bindings :hiddenlabel)]
                                     (html/content n))
-  [:#related :li] (html/clone-for [n (bindings :relatedlabel)]
+  [:#related :li.first] (html/clone-for [n (bindings :relatedlabel)]
                                     (html/content n))
-  [:#prefered :li] (html/content (->> bindings :preflabel first))
-  [:.links :p] (html/clone-for [n (bindings :link)]
+  [:#prefered :li.first] (html/content (->> bindings :preflabel first))
+  [:.links :p.first] (html/clone-for [n (bindings :link)]
                                (html/content
                                  {:tag :a, :attrs {:href n}, :content [n]})))
