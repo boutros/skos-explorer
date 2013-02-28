@@ -25,8 +25,8 @@
   [:ul.related :li.first] (links related :related :relatedlabel)
   [:#broader-or-top] (html/content
                        (if (some #(= (str uri) %) (map :concept topconcepts))
-                         "other top concepts"
-                         "broader concepts"))
+                         "Other top concepts"
+                         "Broader concepts"))
   [:ul.broader :li.first] (if (some #(= (str uri) %) (map :concept topconcepts))
                       (links (remove #(= (str uri) (:concept %)) topconcepts)
                              :concept :label)
