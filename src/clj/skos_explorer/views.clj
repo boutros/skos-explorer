@@ -40,6 +40,6 @@
   [:#related :li.concept] (html/clone-for [n (bindings :relatedlabel)]
                                     (html/content n))
   [:#prefered :li.concept] (html/content (->> bindings :preflabel first))
-  [:.links :p.first] (html/clone-for [n (bindings :link)]
+  [:.links :p.concept] (html/clone-for [n (bindings :link)]
                                (html/content
                                  {:tag :a, :attrs {:href n}, :content [n]})))
