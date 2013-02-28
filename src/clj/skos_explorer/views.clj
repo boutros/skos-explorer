@@ -19,7 +19,8 @@
             "Top concept: "
             "Concept: ")
             (->> bindings :preflabel first)))
-  [:#uri] (html/content (str "<" uri ">"))
+  [:#uri] (html/content {:tag :a :attrs {:href uri },
+                         :content (str "<" uri ">")})
   [:#updated] (html/content (->> bindings :modified first))
   [:#comment] (html/content (->> bindings :comment first))
   [:#scope] (html/content (->> bindings :scopenote first))
