@@ -6,7 +6,7 @@
   (html/clone-for [n linkmap]
     (html/content
       [{:tag :a, :attrs {:href (str "/skos/" (re-find #"[0-9]*$"(uri n)))},
-       :content [(label n)]}
+       :content (label n)}
       {:tag :div :attrs {:class "circle minus"}
        :content [{:tag :p :content "-"}]}])))
 
@@ -43,4 +43,4 @@
   [:#prefered :li.concept] (html/content (->> bindings :preflabel first))
   [:.links :p.concept] (html/clone-for [n (bindings :link)]
                                (html/content
-                                 {:tag :a, :attrs {:href n}, :content [n]})))
+                                 {:tag :a, :attrs {:href n}, :content n})))
