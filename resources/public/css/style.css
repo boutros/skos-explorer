@@ -16,11 +16,11 @@ ul                 { list-style: none; margin:0; padding:0;}
 
 #current           { width: auto; height: 45%; overflow: hidden; margin:1%;}
 .properties        { width: 65%; float: left; font-size: 16px; margin-top:1em;}
-.links             { float: left; margin-top:1em;}
+.links             { float: left; margin-top:1em; padding-left:2%;}
 .label             { width: 120px; font-family: Arial; font-size:14px; font-weight: bold;
                      text-align: right; margin-right:2em; padding-top:4px;}
 .value             { width: 80%; min-height: 1.5em;}
-.binding           { clear: both;}
+.binding           { clear: both; border-bottom: 1px solid #ccc;}
 .binding div       { float: left; }
 ul.labels li       { display: inline-block; float: left; margin-right:1em;
                      padding:2px; border: 1px solid transparent;}
