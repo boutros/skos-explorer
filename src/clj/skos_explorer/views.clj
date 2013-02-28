@@ -22,7 +22,7 @@
   [:#uri] (html/content (str uri))
   [:#updated] (html/content (->> bindings :modified first))
   [:#comment] (html/content (->> bindings :comment first))
-  [:#scope] (html/content (->> bindings :scope first))
+  [:#scope] (html/content (->> bindings :scopenote first))
   [:ul.narrower :li.concept] (links narrower :narrower :narrowerlabel)
   [:ul.related :li.concept] (links related :related :relatedlabel)
   [:#broader-or-top] (html/content
