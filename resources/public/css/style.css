@@ -25,15 +25,16 @@ ul                 { list-style: none; margin:0; padding:0;}
 ul.labels li       { display: inline-block; float: left; margin-right:1em;
                      padding:2px; border: 1px solid transparent;}
 ul.labels li:hover { border: 1px dotted #ccc }
-.link-box          { width: 31%; height: 40%; margin-left: 1%; float:left;
+.link-box          { width: 32%; height: 40%; margin-left: 1%; float:left;
                      background: #333; color: #fff; position: relative;
                      border: 1px solid #ccc; overflow:hidden;}
 .link-box:hover    { background-color: #007bff; border: 1px dotted #ccc;}
 .link-box-inner    { width: 100%; height: 91.5%; background: #fff;
                      overflow:auto;}
-.link-box-inner li { border: 1px solid #fff; padding: 2px; margin:0 1em;
-                     display: inline-block; float: left; width: 40%; word-wrap: break-word;}
+.link-box-inner li { border: 1px solid #fff; padding: 2px; margin:0 0.5em; position: relative;
+                     display: inline-block; float: left; width: 220px; word-wrap: break-word;}
 .link-box-inner li:hover { border: 1px dotted #ccc; }
+.link-box-inner li:hover > div { display: block;}
 #arrow-left        { width: 20px; height: 30%; float:left; overflow:hidden;}
 
 #arrow-down        { width: 100%; height: 20px;
@@ -61,4 +62,5 @@ img.arrow-h        { width: 100%; height: 10px;}
 .circle p          { text-align: center; margin: -0.1em -0.22em; font-weight: bold;
                      padding:0;}
 .circle:hover      { background: #007bff; color: #fff; cursor: pointer;}
+.minus             { position: absolute; top:2px; right: 0px; display: none; }
 
