@@ -1,9 +1,12 @@
 /.lein*
 /target
+/out
+/repl
 /lib
 /classes
 /checkouts
 pom.xml
 *.jar
 *.class
+*.js
 notater.txt

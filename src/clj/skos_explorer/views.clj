@@ -34,13 +34,13 @@
                       (links (remove #(= (str uri) (:concept %)) topconcepts)
                              :concept :label)
                       (links broader :broader :broaderlabel))
-  [:#alternate :li.concept] (html/clone-for [n (bindings :altlabel)]
+  [:#alternate :li.label] (html/clone-for [n (bindings :altlabel)]
                                     (html/content n))
-  [:#hidden :li.concept] (html/clone-for [n (bindings :hiddenlabel)]
+  [:#hidden :li.label] (html/clone-for [n (bindings :hiddenlabel)]
                                     (html/content n))
-  [:#related :li.concept] (html/clone-for [n (bindings :relatedlabel)]
+  [:#related :li.label] (html/clone-for [n (bindings :relatedlabel)]
                                     (html/content n))
-  [:#prefered :li.concept] (html/content (->> bindings :preflabel first))
-  [:.links :p.concept] (html/clone-for [n (bindings :link)]
+  [:#prefered :li.label] (html/content (->> bindings :preflabel first))
+  [:.links :p.link] (html/clone-for [n (bindings :link)]
                                (html/content
                                  {:tag :a, :attrs {:href n}, :content n})))
