@@ -1,8 +1,9 @@
 (ns skos-explorer.clientside
-  (:require [enfocus.core :as ef]
-            [clojure.browser.repl :as repl])
-  (:require-macros [enfocus.macros :as em]))
+  (:require [clojure.browser.repl :as repl]
+            [domina :refer [by-id value log]]))
 
 (repl/connect "http://localhost:9000/repl")
 
-(js/console.log "Hallo der, mister Åsen.")
+(log "Hallo der, mister Åsen.")
+
+
