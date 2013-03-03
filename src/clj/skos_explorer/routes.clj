@@ -4,7 +4,8 @@
             [compojure.handler :as handler]
             [compojure.response :as response]
             [skos-explorer.views :as views]
-            [skos-explorer.sparql :as sparql])
+            [skos-explorer.sparql :as sparql]
+            [ring.middleware.edn :refer [wrap-edn-params]])
   (:import java.net.URI))
 
 (defroutes main-routes
@@ -24,4 +25,4 @@
   (route/not-found "Page not found"))
 
 (def server
-  (handler/api main-routes))
+  (handler/api (wrap-edn-params main-routes)))

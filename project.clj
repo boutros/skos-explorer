@@ -4,14 +4,14 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src/clj"]
-  :dependencies [[org.clojure/clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.5.0"]
                  [compojure "1.1.5"]
+                 [fogus/ring-edn "0.2.0-SNAPSHOT"]
                  [enlive "1.1.1"]
                  [clj-http "0.6.4"]
                  [cheshire "5.0.1"]
                  [matsu "0.1.0-SNAPSHOT"]
-                 [domina "1.0.0"]
-                 [org.clojure/google-closure-library-third-party "0.0-2029"]]
+                 [prismatic/dommy "0.0.2"]]
   :plugins [[lein-ring "0.8.3"]
             [thheller/lein-test-loop "0.3.0"]
             [lein-cljsbuild "0.3.0"]]
