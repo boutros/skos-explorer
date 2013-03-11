@@ -21,7 +21,7 @@
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
     (select-reduced :preflabel :altlabel :hiddenlabel :scopenote :comment
                     :narrower :narrowerlabel :broader :broaderlabel
-                    :related :relatedlabel :modified :link)
+                    :related :relatedlabel :modified :link :note :example)
     (where uri a [:Concept] \;
            [:prefLabel] :preflabel \.
            (filter (lang-matches (lang :preflabel) "en"))
@@ -40,7 +40,9 @@
            (optional uri [:altLabel] :altlabel
                      (filter (lang-matches (lang :altlabel) "en")))
            (optional uri [:hiddenLabel] :hiddenlabel)
-           (optional uri [:scopeNote] :scopenote))))
+           (optional uri [:scopeNote] :scopenote)
+           (optional uri [:note] :note)
+           (optional uri [:example] :example))))
 
 (defquery top-concepts
   (select-distinct :concept :label)
