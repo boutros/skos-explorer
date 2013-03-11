@@ -14,11 +14,11 @@
   "public/skos.html"
   [uri bindings narrower broader related topconcepts]
 
-  [:h2] (html/content (str
-          (if (some #(= (str uri) %) (map :concept topconcepts))
-            "Top concept: "
-            "Concept: ")
-            (->> bindings :preflabel first)))
+  [:#heading] (html/content (str
+                (if (some #(= (str uri) %) (map :concept topconcepts))
+                  "Top concept: "
+                  "Concept: ")
+                (->> bindings :preflabel first)))
   [:#uri] (html/content {:tag :a :attrs {:href uri },
                          :content (str uri)})
   [:#updated] (html/content (->> bindings :modified first))
