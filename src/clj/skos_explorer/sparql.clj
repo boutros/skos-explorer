@@ -23,9 +23,9 @@
                     :narrower :narrowerlabel :broader :broaderlabel
                     :related :relatedlabel :modified :link)
     (where uri a [:Concept] \;
-           [:prefLabel] :preflabel \;
-           [:dc :modified] :modified
+           [:prefLabel] :preflabel \.
            (filter (lang-matches (lang :preflabel) "en"))
+           (optional uri [:dc :modified] :modified)
            (optional uri [:rdfs :comment] :comment)
            (optional uri [:exactMatch] :link)
            (optional uri [:narrower] :narrower \.
