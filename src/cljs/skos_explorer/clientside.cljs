@@ -1,5 +1,6 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
+            [goog.style :as style]
             [dommy.template :as html]
             [dommy.core :as dom])
   (:require-macros [dommy.core-compile :refer [sel sel1]]
@@ -30,5 +31,12 @@
 
 (defn fu [evt] (.log js/console (->> evt .-target .-parentElement .-parentElement)))
 
+(defn searching [event]
+  (let [s (.-value (sel1 "#search"))]
+    (if (<= 2 (count s))
+      (style/setStyle (sel1 "#search-results") "display" "block")
+      (style/setStyle (sel1 "#search-results") "display" "none"))))
+
 (defn ^:export init []
-  (log "Hallo der, mister Åsen."))
+  (log "Hallo der, mister Åsen.")
+  (dom/listen! (sel1 "#search") :keyup searching))
