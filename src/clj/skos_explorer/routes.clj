@@ -9,10 +9,9 @@
   (:import java.net.URI))
 
 (defroutes main-routes
-  (GET "/" [] "index")
-  (GET ["/skos/:id", :id #"[0-9]+"]
-       [id]
-       (let [uri (URI. (str "http://vocabulary.curriculum.edu.au/scot/" id))
+  (GET ["/"]
+       [uri]
+       (let [uri (URI. uri)
              topconcepts (->> (sparql/fetch-top-concepts) sparql/solutions (sparql/extract [:concept :label]))
              res (sparql/fetch uri)
              s (sparql/solutions res)

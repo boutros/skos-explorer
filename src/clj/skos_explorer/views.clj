@@ -5,7 +5,7 @@
   [linkmap uri label]
   (html/clone-for [n linkmap]
     (html/content
-      [{:tag :a, :attrs {:href (str "/skos/" (re-find #"[0-9]*$"(uri n)))},
+      [{:tag :a, :attrs {:href (str "/?uri=" (uri n))},
        :content (label n)}
       {:tag :div :attrs {:class "circle minus"}
        :content [{:tag :p :content "-"}]}])))
