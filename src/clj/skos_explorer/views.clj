@@ -21,6 +21,7 @@
                 (->> bindings :preflabel first)))
   [:#uri] (html/content {:tag :a :attrs {:href uri },
                          :content (str uri)})
+  [:#created] (html/content (->> bindings :created first))
   [:#updated] (html/content (->> bindings :modified first))
   [:#comment] (html/content (->> bindings :comment first))
   [:#scope] (html/content (->> bindings :scopenote first))

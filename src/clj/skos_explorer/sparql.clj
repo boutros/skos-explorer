@@ -7,7 +7,8 @@
             [clojure.walk :refer [keywordize-keys]])
   (:import java.net.URI))
 
-(def endpoint "http://localhost:8890/sparql")
+(def config
+  (read-string (slurp "resources/config.edn")))
 
 (register-namespaces {:skos "<http://www.w3.org/2004/02/skos/core#>"
                       :dc "<http://purl.org/dc/terms/>"
@@ -19,11 +20,12 @@
   [uri]
   (query
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
-    (select-reduced :preflabel :altlabel :hiddenlabel :scopenote :comment
+    (select-reduced :created :preflabel :altlabel :hiddenlabel :scopenote :comment
                     :narrower :narrowerlabel :broader :broaderlabel
                     :related :relatedlabel :modified :link :note :example)
     (where uri a [:Concept] \;
-           [:prefLabel] :preflabel \.
+           [:prefLabel] :preflabel \;
+           [:dc :created] :created \.
            (filter (lang-matches (lang :preflabel) "en"))
            (optional uri [:dc :modified] :modified)
            (optional uri [:rdfs :comment] :comment)
@@ -46,21 +48,21 @@
 
 (defquery top-concepts
   (select-distinct :concept :label)
-  (where :concept [:skos :topConceptOf] (URI. "http://vocabulary.curriculum.edu.au/scot") \;
+  (where :concept [:skos :topConceptOf] (URI. (config :dataset)) \;
                   [:skos :prefLabel] :label
           (filter (lang-matches (lang :label) "en"))))
 
 (defn fetch
   "Perform SPARQL query"
   [uri]
-  (client/get endpoint
+  (client/get (config :endpoint)
               {:query-params {"query" (concept uri)
                               "format" "application/sparql-results+json"}}))
 
 (defn fetch-top-concepts
   "Returns the URIs of skos:topConcept"
   []
-  (client/get endpoint
+  (client/get (config :endpoint)
               {:query-params {"query" (query top-concepts)
                               "format" "application/sparql-results+json"}}))
 
