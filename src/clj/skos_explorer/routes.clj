@@ -11,7 +11,7 @@
 (defroutes main-routes
   (GET ["/"]
        [uri]
-       (let [uri (URI. uri)
+       (let [uri (URI. (or uri "http://vocabulary.curriculum.edu.au/scot/1028"))
              topconcepts (->> (sparql/fetch-top-concepts) sparql/solutions (sparql/extract [:concept :label]))
              res (sparql/fetch uri)
              s (sparql/solutions res)
