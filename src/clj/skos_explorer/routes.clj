@@ -8,10 +8,13 @@
             [ring.middleware.edn :refer [wrap-edn-params]])
   (:import java.net.URI))
 
+(defonce config
+  (read-string (slurp "resources/config.edn")))
+
 (defroutes main-routes
   (GET ["/"]
        [uri]
-       (let [uri (URI. (or uri "http://vocabulary.curriculum.edu.au/scot/1028"))
+       (let [uri (URI. (or uri (config :default-uri)))
              topconcepts (->> (sparql/fetch-top-concepts) sparql/solutions (sparql/extract [:concept :label]))
              res (sparql/fetch uri)
              s (sparql/solutions res)

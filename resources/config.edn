@@ -1,4 +1,13 @@
 {
   :endpoint "http://localhost:8890/sparql"
   :dataset "http://vocabulary.curriculum.edu.au/scot"
+  :graph "http://localhost:8890/skos"
+  :default-uri "http://vocabulary.curriculum.edu.au/scot/1028"
 }
+
+; {
+;   :endpoint "http://localhost:8890/sparql"
+;   :dataset "http://id.loc.gov/authorities/subjects"
+;   :graph http:localhost:8890/loc"
+;   :default-uri "http://id.loc.gov/authorities/subjects/sh99005029"
+; }

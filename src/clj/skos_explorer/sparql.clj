@@ -7,7 +7,7 @@
             [clojure.walk :refer [keywordize-keys]])
   (:import java.net.URI))
 
-(def config
+(defonce config
   (read-string (slurp "resources/config.edn")))
 
 (register-namespaces {:skos "<http://www.w3.org/2004/02/skos/core#>"
@@ -23,6 +23,7 @@
     (select-reduced :created :preflabel :altlabel :hiddenlabel :scopenote :comment
                     :narrower :narrowerlabel :broader :broaderlabel
                     :related :relatedlabel :modified :link :note :example)
+    (from (URI. (config :graph)))
     (where uri a [:Concept] \;
            [:prefLabel] :preflabel \;
            [:dc :created] :created \.
