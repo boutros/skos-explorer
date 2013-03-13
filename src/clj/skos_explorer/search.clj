@@ -9,17 +9,17 @@
                            :cluster-name (config :elastic-cluster)}))
 
 (defn search-query
-  [term]
+  [term offset limit]
   {:query
    {:multi_match {:fields ["title" "labels" "description"]
                   :query term}}
     :highlight {:fields {"description" {} "labels" {} }}
-    :from 0
-    :size 15})
+    :from offset
+    :size limit})
 
 (defn results
-  [term]
+  [term offset limit]
   (select-keys ((search es {:indices [(config :elastic-index)]
                             :types [(config :elastic-type)]
-                            :extra-source (search-query term)}) :hits)
+                            :extra-source (search-query term offset limit)}) :hits)
                [:hits :total]))

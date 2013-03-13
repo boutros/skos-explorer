@@ -30,8 +30,8 @@
              related (sparql/extract [:related :relatedlabel] s)]
          (views/concept uri b narrower broader related topconcepts)))
   (POST "/search"
-        [term]
-        (generate-response (search/results term)))
+        [term offset limit]
+        (generate-response (search/results term offset limit)))
   (route/resources "/")
   (route/not-found "Page not found"))
 

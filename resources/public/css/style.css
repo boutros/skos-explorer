@@ -24,7 +24,7 @@ ul                 { list-style: none; margin:0; padding:0;}
 #search-table th   { font-family: Arial; font-size:14px; font-weight: bold; }
 td.title           { width: 200px;}
 td.labels          { width: 200px;}
-td.labels, td.description { font-size:16px ;}
+td.labels, td.description { font-size:16px;}
 .search-info       { float:right; text-align:right; font-family: Arial;
                      padding:5px; margin: 1em 2em; width:90%;}
 

@@ -58,7 +58,7 @@
     (if (<= 2 (count s))
       (do
         (style/setStyle (by-id "search-results") "display" "block")
-        (edn-call "/search" searched "POST" {:term s}))
+        (edn-call "/search" searched "POST" {:term s :offset 0 :limit 15}))
       (style/setStyle (by-id "search-results") "display" "none"))))
 
 (defn ^:export init []
