@@ -1,24 +1,29 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
+            [domina :refer [by-id log]]
+            [domina.events :refer [listen!]]
             [goog.net.XhrIo :as xhr]
-            [goog.style :as style]
-            [dommy.template :as html]
-            [dommy.core :as dom])
-  (:require-macros [dommy.core-compile :refer [sel sel1]]
-                   [dommy.template-compile :refer [node deftemplate]]))
+            [goog.style :as style]))
 
 ;(repl/connect "http://localhost:9000/repl")
 
-(defn log [& more]
-  (.log js/console (apply str more)))
+        ;(if-let [l (get-in r [:highlight :labels])]
+         ; (clojure.string/join l)
 
-(defn click!
-  "Simulates a click event on node"
-  [node]
-  (let [event (.createEvent js/document "MouseEvents")]
-    (.initMouseEvent event "click" true true)
-    (.dispatchEvent node event)))
+(defn search-results [results]
+  (clojure.string/join
+    (for [r results]
+      (str "<tr><td class='description'>"
+           (when-let [d (get-in r[:highlight :description])]
+             (apply str d))
+           "</td><td class='labels'>"
+            (when-let [l (get-in r[:highlight :labels])]
+             (clojure.string/join ", " l))
+           "</td>"
+           "<td class='title'><a href='/?uri=" (r :_id) "'>"
+           (get-in r [:_source :title])
+           "</a></td></tr>"))))
 
 (defn live-listen!
   "Listen on all elements in container, currently elem can only be a tag"
@@ -44,16 +49,16 @@
 (defn searched [event]
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
-    (set! (.-innerHTML (sel1 "#search-results")) results)))
+    (set! (.-innerHTML (by-id "search-table")) (search-results results))))
 
 (defn searching [event]
-  (let [s (.-value (sel1 "#search"))]
+  (let [s (.-value (by-id "search"))]
     (if (<= 2 (count s))
       (do
-        (style/setStyle (sel1 "#search-results") "display" "block")
+        (style/setStyle (by-id "search-results") "display" "block")
         (edn-call "/search" searched "POST" {:term s}))
-      (style/setStyle (sel1 "#search-results") "display" "none"))))
+      (style/setStyle (by-id "search-results") "display" "none"))))
 
 (defn ^:export init []
   (log "Hallo der, mister Åsen.")
-  (dom/listen! (sel1 "#search") :keyup searching))
+  (listen! (by-id "search") :keyup searching))

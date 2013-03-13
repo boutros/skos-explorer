@@ -13,7 +13,9 @@
   {:query
    {:multi_match {:fields ["title" "labels" "description"]
                   :query term}}
-    :highlight {:fields {"description" {} "labels" {} }}})
+    :highlight {:fields {"description" {} "labels" {} }}
+    :from 0
+    :size 40})
 
 (defn results
   [term]

@@ -11,7 +11,7 @@
                  [clj-http "0.6.4"]
                  [cheshire "5.0.1"]
                  [matsu "0.1.1-SNAPSHOT"]
-                 [prismatic/dommy "0.0.2"]
+                 [domina "1.0.2-SNAPSHOT"]
                  [clj-elasticsearch "0.4.0-RC1"]
                  [org.elasticsearch/elasticsearch "0.20.5"]]
   :plugins [[lein-ring "0.8.3"]

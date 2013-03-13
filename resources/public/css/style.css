@@ -17,8 +17,13 @@ ul                 { list-style: none; margin:0; padding:0;}
                      position: relative;}
 #search            { position: absolute; right:10px; top: 3px; padding: 4px;
                      border: 2px solid #aaa;}
-#search-results    { position: absolute; top:40px; left: 0; width: 100%; height: 85%;
-                     background-color: rgba(255,255,255,0.9); display: none; z-index: 5000;}
+#search-results    { position: absolute; top:60px; left: 0; width: 100%; height: 90%; overflow: auto;
+                     background-color: rgba(255,255,255,0.8); display: none; z-index: 5000;}
+#search-table      { text-align: right; float: right; margin-right:2em;}
+#search-table em   { font-style: normal; background: #FFFFCC; }
+td.title           { width: 200px;}
+td.labels          { width: 200px;}
+td.labels, td.description { font-size:16px ;}
 
 table.properties   { width: 65%; float:left; font-size: 16px; margin-top:1em;
                      border-collapse:collapse;}
@@ -27,7 +32,7 @@ td.label           { width: 150px; font-family: Arial; font-size:14px; font-weig
                      text-align: right; padding-right:2em; }
 td.value             { width: auto; height: 1.5em;}
 tr.binding         { }
-tr:nth-child(odd)  { background:#fff;}
+.properties tr:nth-child(odd)  { background:#fff;}
 .binding > div       { float: left; }
 ul.labels li       { display: inline-block; float: left; margin-right:1em;
                      padding:2px; border: 1px solid transparent;}
