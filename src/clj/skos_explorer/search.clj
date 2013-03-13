@@ -15,7 +15,7 @@
                   :query term}}
     :highlight {:fields {"description" {} "labels" {} }}
     :from 0
-    :size 40})
+    :size 15})
 
 (defn results
   [term]

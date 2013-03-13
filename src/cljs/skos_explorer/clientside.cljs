@@ -49,7 +49,7 @@
 (defn searched [event]
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
-    (set! (.-innerHTML (by-id "search-table")) (search-results results))))
+    (set! (.-innerHTML (by-id "search-body")) (search-results results))))
 
 (defn searching [event]
   (let [s (.-value (by-id "search"))]
