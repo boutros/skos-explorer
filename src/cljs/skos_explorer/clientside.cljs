@@ -2,7 +2,7 @@
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
             [domina :refer [by-id log]]
-            [domina.events :refer [listen!]]
+            [domina.events :refer [listen! raw-event]]
             [goog.net.XhrIo :as xhr]
             [goog.style :as style]))
 
@@ -49,17 +49,21 @@
 (defn searched [event]
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
-    (log results)
     (set! (.-innerHTML (by-id "search-body")) (search-results results))
     (set! (.-innerHTML (by-id "num-hits")) (results :total))))
 
 (defn searching [event]
-  (let [s (.-value (by-id "search"))]
+  (let [s (.-value (by-id "search"))
+        keycode (.-keyCode (raw-event event))]
+    (if (= keycode 27)
+      (do
+        (style/setStyle (by-id "search-results") "display" "none")
+        (set! (.-value (by-id "search")) ""))
     (if (<= 2 (count s))
       (do
         (style/setStyle (by-id "search-results") "display" "block")
         (edn-call "/search" searched "POST" {:term s :offset 0 :limit 15}))
-      (style/setStyle (by-id "search-results") "display" "none"))))
+      (style/setStyle (by-id "search-results") "display" "none")))))
 
 (defn ^:export init []
   (log "Hallo der, mister Åsen.")
