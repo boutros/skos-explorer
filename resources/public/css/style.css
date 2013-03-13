@@ -21,8 +21,8 @@ ul                 { list-style: none; margin:0; padding:0;}
                      background-color: rgba(255,255,255,0.8); display: none; z-index: 5000;}
 #search-table      { clear:both; text-align: right; float: right; margin-right:2em;}
 #search-table em   { font-style: normal; background: #FFFFCC; }
-#search-table th   { font-family: Arial; font-size:14px; font-weight: bold; }
-td.title           { width: 200px;}
+#search-table th   { font-family: Arial; font-size:14px; font-weight: bold; min-width: 200px;}
+td.title           { min-width: 200px;}
 td.labels          { width: 200px;}
 td.labels, td.description { font-size:16px;}
 .search-info       { float:right; text-align:right; font-family: Arial;
