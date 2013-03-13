@@ -1,5 +1,7 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
+            [cljs.reader :as reader]
+            [goog.net.XhrIo :as xhr]
             [goog.style :as style]
             [dommy.template :as html]
             [dommy.core :as dom])
@@ -31,10 +33,25 @@
 
 (defn fu [evt] (.log js/console (->> evt .-target .-parentElement .-parentElement)))
 
+(defn edn-call
+  [path callback method data]
+  (xhr/send path
+            callback
+            method
+            (pr-str data)
+            (clj->js {"Content-Type" "application/edn"})))
+
+(defn searched [event]
+  (let [response (.-target event)
+        results (reader/read-string (.getResponseText response))]
+    (set! (.-innerHTML (sel1 "#search-results")) results)))
+
 (defn searching [event]
   (let [s (.-value (sel1 "#search"))]
     (if (<= 2 (count s))
-      (style/setStyle (sel1 "#search-results") "display" "block")
+      (do
+        (style/setStyle (sel1 "#search-results") "display" "block")
+        (edn-call "/search" searched "POST" {:term s}))
       (style/setStyle (sel1 "#search-results") "display" "none"))))
 
 (defn ^:export init []

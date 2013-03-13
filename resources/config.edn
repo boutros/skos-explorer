@@ -3,6 +3,11 @@
   :dataset "http://vocabulary.curriculum.edu.au/scot"
   :graph "http://localhost:8890/skos"
   :default-uri "http://vocabulary.curriculum.edu.au/scot/1028"
+
+  :elastic-host "localhost:9300"
+  :elastic-cluster "elasticsearch"
+  :elastic-index "concept"
+  :elastic-type "skos"
 }
 
 ; {
@@ -10,4 +15,9 @@
 ;   :dataset "http://id.loc.gov/authorities/subjects"
 ;   :graph http:localhost:8890/loc"
 ;   :default-uri "http://id.loc.gov/authorities/subjects/sh99005029"
+;
+;   :elastic-host "http://localhost:9300"
+;   :elastic-cluster "elasticsearch"
+;   :elastic-index "concept"
+;   :elastic-type "sloc"
 ; }
