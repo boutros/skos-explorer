@@ -19,7 +19,7 @@
 
 (defn results
   [term]
-  (-> (search es {:indices [(config :elastic-index)]
-                  :types [(config :elastic-type)]
-                  :extra-source (search-query term)})
-      :hits :hits))
+  (select-keys ((search es {:indices [(config :elastic-index)]
+                            :types [(config :elastic-type)]
+                            :extra-source (search-query term)}) :hits)
+               [:hits :total]))

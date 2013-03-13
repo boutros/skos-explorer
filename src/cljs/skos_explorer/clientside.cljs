@@ -13,7 +13,7 @@
 
 (defn search-results [results]
   (clojure.string/join
-    (for [r results]
+    (for [r (results :hits)]
       (str "<tr><td class='description'>"
            (when-let [d (get-in r[:highlight :description])]
              (apply str d))
@@ -49,7 +49,9 @@
 (defn searched [event]
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
-    (set! (.-innerHTML (by-id "search-body")) (search-results results))))
+    (log results)
+    (set! (.-innerHTML (by-id "search-body")) (search-results results))
+    (set! (.-innerHTML (by-id "num-hits")) (results :total))))
 
 (defn searching [event]
   (let [s (.-value (by-id "search"))]
