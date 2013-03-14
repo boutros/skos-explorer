@@ -1,7 +1,7 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
-            [domina :refer [by-id log]]
+            [domina :refer [by-id log set-value! remove-attr! set-attr!]]
             [domina.events :refer [listen! raw-event]]
             [goog.net.XhrIo :as xhr]
             [goog.style :as style]))
@@ -50,7 +50,15 @@
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
     (set! (.-innerHTML (by-id "search-body")) (search-results results))
-    (set! (.-innerHTML (by-id "num-hits")) (str (results :total) " (" (/ (results :took) 1000) " sekunder)"))))
+    (set! (.-innerHTML (by-id "num-hits")) (str (results :total) " (" (/ (results :took) 1000) " sekunder)"))
+    (set-value! (by-id "offset") (results :offset))
+    (set-value! (by-id "limit") (results :limit))
+    (if (> (results :total) (+ (results :offset) (results :limit)))
+      (remove-attr! (by-id "search-next") "disabled")
+      (set-attr! (by-id "search-next") "disabled"))
+    (if (> (results :offset) 0)
+      (remove-attr! (by-id "search-prev") "disabled")
+      (set-attr! (by-id "search-prev") "disabled"))))
 
 (defn searching [event]
   (let [s (.-value (by-id "search"))
@@ -65,6 +73,20 @@
         (edn-call "/search" searched "POST" {:term s :offset 0 :limit 15}))
       (style/setStyle (by-id "search-results") "display" "none")))))
 
+(defn search-next [event]
+  (let [s (.-value (by-id "search"))
+        offset (js/parseInt (.-value (by-id "offset")))
+        limit (js/parseInt (.-value (by-id "limit")))]
+    (edn-call "/search" searched "POST" {:term s :offset (+ offset limit) :limit limit})))
+
+(defn search-prev [event]
+  (let [s (.-value (by-id "search"))
+        offset (js/parseInt (.-value (by-id "offset")))
+        limit (js/parseInt (.-value (by-id "limit")))]
+    (edn-call "/search" searched "POST" {:term s :offset (max (- offset limit) 0) :limit limit})))
+
 (defn ^:export init []
   (log "Hallo der, mister Åsen.")
-  (listen! (by-id "search") :keyup searching))
+  (listen! (by-id "search") :keyup searching)
+  (listen! (by-id "search-next") :click search-next)
+  (listen! (by-id "search-prev") :click search-prev))

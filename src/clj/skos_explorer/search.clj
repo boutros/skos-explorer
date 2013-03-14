@@ -24,4 +24,5 @@
                             :extra-source (search-query term offset limit)})]
     {:took (results :took)
      :hits (get-in results [:hits :hits])
-     :total (get-in results [:hits :total])}))
+     :total (get-in results [:hits :total])
+     :offset offset :limit limit}))
