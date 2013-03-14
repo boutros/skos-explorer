@@ -19,7 +19,9 @@
 
 (defn results
   [term offset limit]
-  (select-keys ((search es {:indices [(config :elastic-index)]
+  (let [results (search es {:indices [(config :elastic-index)]
                             :types [(config :elastic-type)]
-                            :extra-source (search-query term offset limit)}) :hits)
-               [:hits :total]))
+                            :extra-source (search-query term offset limit)})]
+    {:took (results :took)
+     :hits (get-in results [:hits :hits])
+     :total (get-in results [:hits :total])}))

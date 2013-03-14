@@ -50,7 +50,7 @@
   (let [response (.-target event)
         results (reader/read-string (.getResponseText response))]
     (set! (.-innerHTML (by-id "search-body")) (search-results results))
-    (set! (.-innerHTML (by-id "num-hits")) (results :total))))
+    (set! (.-innerHTML (by-id "num-hits")) (str (results :total) " (" (/ (results :took) 1000) " sekunder)"))))
 
 (defn searching [event]
   (let [s (.-value (by-id "search"))
