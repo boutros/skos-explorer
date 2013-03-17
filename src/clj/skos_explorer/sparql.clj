@@ -15,6 +15,10 @@
                       :owl "<http://www.w3.org/2002/07/owl#>"
                       :rdfs "<http://www.w3.org/2000/01/rdf-schema#>"})
 
+(defn languages [v]
+  (interpose || (for [l (config :languages)]
+                 (lang-matches (lang v) l))))
+
 (defn concept
   "SPARQL-query to get relevant properites from a skos:Concept"
   [uri]
@@ -27,21 +31,21 @@
     (where uri a [:Concept] \;
            [:prefLabel] :preflabel \;
            [:dc :created] :created \.
-           (filter (lang-matches (lang :preflabel) "en"))
+           (filter (languages :preflabel))
            (optional uri [:dc :modified] :modified)
            (optional uri [:rdfs :comment] :comment)
            (optional uri [:exactMatch] :link)
            (optional uri [:narrower] :narrower \.
                      :narrower [:prefLabel] :narrowerlabel
-                     (filter (lang-matches (lang :narrowerlabel) "en")))
+                     (filter (languages :narrowerlabel)))
            (optional uri [:broader] :broader \.
                      :broader [:prefLabel] :broaderlabel
-                     (filter (lang-matches (lang :broaderlabel) "en")))
+                     (filter (languages :broaderlabel)))
            (optional uri [:related] :related \.
                      :related [:prefLabel] :relatedlabel
-                     (filter (lang-matches (lang :relatedlabel) "en")))
+                     (filter (languages :relatedlabel)))
            (optional uri [:altLabel] :altlabel
-                     (filter (lang-matches (lang :altlabel) "en")))
+                     (filter (languages :altlabel)))
            (optional uri [:hiddenLabel] :hiddenlabel)
            (optional uri [:scopeNote] :scopenote)
            (optional uri [:note] :note)
@@ -96,3 +100,12 @@
     => #{{:a 1} {:a 2} {:b 3} ..}"
   [vars solutions]
   (set (remove empty? (map #(select-keys % vars) solutions))))
+
+(defn solutions-with-lang
+  "Solutions with language tags"
+  [response]
+  (for [solution
+        (->> response :body parse-string keywordize-keys :results :bindings)]
+    (into {}
+          (for [[k v] solution]
+            [k {:value (:value v) :lang (:xml:lang v)}]))))
