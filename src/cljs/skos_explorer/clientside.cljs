@@ -1,8 +1,10 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
-            [domina :refer [by-id log set-value! remove-attr! set-attr!]]
-            [domina.events :refer [listen! raw-event]]
+            [domina :refer [by-id by-class log set-value! attr remove-attr!
+                            set-attr! remove-class! add-class! text set-text!]]
+            [domina.events :refer [listen! raw-event target dispatch!
+                                   prevent-default]]
             [goog.net.XhrIo :as xhr]
             [goog.style :as style]))
 
@@ -85,8 +87,52 @@
         limit (js/parseInt (.-value (by-id "limit")))]
     (edn-call "/search" searched "POST" {:term s :offset (max (- offset limit) 0) :limit limit})))
 
+(defn label-focus [event]
+  (let [n (target event)
+        lang (attr n :data-original-lang)
+        original (attr n :data-original-value)]
+    (set-text! n (str \" original \" "@" lang))))
+
+(defn label-save [n value lang]
+  (do
+    ;(edn-call sparql update goes here)
+    (set-attr! n :data-original-value value)
+    (set-attr! n :data-original-lang lang)
+    (remove-class! n "editing")
+    (.focus (by-id"search"))
+    (.blur (by-id "search"))))
+
+(defn label-edit [event]
+  (let [n (target event)
+        keycode (.-keyCode (raw-event event))
+        lang (attr n :data-original-lang)
+        original (attr n :data-original-value)
+        edited-text (last (re-find #"\"(.+)\"" (text n))) ;"
+        edited-lang (last (re-find #"@(.+)$" (text n)))]
+    (if (= (text n) (str \" original \" "@" lang))
+      (remove-class! n "editing")
+      (add-class! n "editing"))
+    (when (= keycode 13)
+      (prevent-default event)
+      (label-save n edited-text edited-lang))
+    (when (= keycode 27)
+      (remove-class! n "editing")
+      (set-text! n original)
+      (.focus (by-id"search"))
+      (.blur (by-id "search")))))
+
+(defn label-blur [event]
+  (let [n (target event)
+        original (attr n :data-original-value)]
+    (remove-class! n "editing")
+    (set-text! n original)))
+
 (defn ^:export init []
   (log "Hallo der, mister Åsen.")
   (listen! (by-id "search") :keyup searching)
   (listen! (by-id "search-next") :click search-next)
-  (listen! (by-id "search-prev") :click search-prev))
+  (listen! (by-id "search-prev") :click search-prev)
+  (listen! (by-class "label") :focus label-focus)
+  (listen! (by-class "label") :blur label-blur)
+  (listen! (by-class "label") :keyup label-edit)
+  (listen! (by-class "label") :keydown label-edit))

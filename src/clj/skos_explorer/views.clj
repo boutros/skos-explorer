@@ -10,9 +10,17 @@
       {:tag :div :attrs {:class "circle minus"}
        :content [{:tag :p :content "-"}]}])))
 
+(defn labels
+  [coll k]
+  (html/clone-for [n coll]
+                  (html/do->
+                    (html/content (-> n k :value))
+                    (html/set-attr :data-original-value (-> n k :value))
+                    (html/set-attr :data-original-lang (-> n k :lang)))))
+
 (html/deftemplate concept
   "public/concept.html"
-  [uri bindings narrower broader related topconcepts]
+  [uri bindings comments note scope example prefered alternate hidden narrower broader related topconcepts]
 
   [:#heading] (html/content (str
                 (if (some #(= (str uri) %) (map :concept topconcepts))
@@ -23,14 +31,10 @@
                          :content (str uri)})
   [:#created] (html/content (->> bindings :created first))
   [:#updated] (html/content (->> bindings :modified first))
-  [:#comment :li.label] (html/clone-for [n (->> bindings :comment)]
-                              (html/content n))
-  [:#note :li.label] (html/clone-for [n (->> bindings :note)]
-                                     (html/content n))
-  [:#scope :li.label] (html/clone-for [n (->> bindings :scopenote)]
-                                      (html/content n))
-  [:#example :li.label] (html/clone-for [n (->> bindings :example)]
-                                        (html/content n))
+  [:#comment :li.label] (labels comments :comment)
+  [:#note :li.label] (labels note :note)
+  [:#scope :li.label] (labels scope :scopenote)
+  [:#example :li.label] (labels example :example)
   [:ul.narrower :li.concept] (links narrower :narrower :narrowerlabel)
   [:ul.related :li.concept] (links related :related :relatedlabel)
   [:#broader-or-top] (html/content
@@ -41,13 +45,11 @@
                       (links (remove #(= (str uri) (:concept %)) topconcepts)
                              :concept :label)
                       (links broader :broader :broaderlabel))
-  [:#alternate :li.label] (html/clone-for [n (bindings :altlabel)]
-                                    (html/content n))
-  [:#hidden :li.label] (html/clone-for [n (bindings :hiddenlabel)]
-                                    (html/content n))
+  [:#alternate :li.label] (labels alternate :altlabel)
+  [:#hidden :li.label] (labels hidden :hiddenlabel)
   [:#related :li.label] (html/clone-for [n (bindings :relatedlabel)]
                                     (html/content n))
-  [:#prefered :li.label] (html/content (->> bindings :preflabel first))
+  [:#prefered :li.label] (labels prefered :preflabel)
   [:.links :p.link] (html/clone-for [n (bindings :link)]
                                (html/content
                                  {:tag :a, :attrs {:href n}, :content n})))

@@ -44,7 +44,8 @@ tr.binding         { }
 ul.labels li       { display: inline-block; float: left; margin-right:1em;
                      padding:2px; border: 1px solid transparent;}
 ul.labels li:hover { border: 1px dotted #ccc }
-.link-box          { width: 32%; height: 40%; margin-left: 1%; float:left;
+.editing           { background: #ffaa33 !important;}
+.link-box          { width: 32%; height: 38%; margin-left: 1%; float:left;
                      background: #333; color: #fff; position: relative;
                      border: 1px solid #ccc; overflow:hidden;}
 .link-box:hover    { background-color: #007bff; border: 1px dotted #ccc;}
