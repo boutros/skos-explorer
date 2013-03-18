@@ -11,7 +11,7 @@
        :content [{:tag :p :content "-"}]}])))
 
 (html/deftemplate concept
-  "public/skos.html"
+  "public/concept.html"
   [uri bindings narrower broader related topconcepts]
 
   [:#heading] (html/content (str
