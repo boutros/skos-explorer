@@ -23,10 +23,14 @@
                          :content (str uri)})
   [:#created] (html/content (->> bindings :created first))
   [:#updated] (html/content (->> bindings :modified first))
-  [:#comment] (html/content (->> bindings :comment first))
-  [:#note] (html/content (->> bindings :note first))
-  [:#scope] (html/content (->> bindings :scopenote first))
-  [:#example] (html/content (->> bindings :example first))
+  [:#comment :li.label] (html/clone-for [n (->> bindings :comment)]
+                              (html/content n))
+  [:#note :li.label] (html/clone-for [n (->> bindings :note)]
+                                     (html/content n))
+  [:#scope :li.label] (html/clone-for [n (->> bindings :scopenote)]
+                                      (html/content n))
+  [:#example :li.label] (html/clone-for [n (->> bindings :example)]
+                                        (html/content n))
   [:ul.narrower :li.concept] (links narrower :narrower :narrowerlabel)
   [:ul.related :li.concept] (links related :related :relatedlabel)
   [:#broader-or-top] (html/content
