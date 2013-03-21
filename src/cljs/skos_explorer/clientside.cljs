@@ -10,9 +10,6 @@
 
 ;(repl/connect "http://localhost:9000/repl")
 
-        ;(if-let [l (get-in r [:highlight :labels])]
-         ; (clojure.string/join l)
-
 (defn search-results [results]
   (clojure.string/join
     (for [r (results :hits)]
@@ -20,7 +17,7 @@
            (when-let [d (get-in r[:highlight :description])]
              (apply str d))
            "</td><td class='labels'>"
-            (when-let [l (get-in r[:highlight :labels])]
+           (when-let [l (get-in r[:highlight :labels])]
              (clojure.string/join ", " l))
            "</td>"
            "<td class='title'><a href='/?uri=" (r :_id) "'>"
@@ -36,7 +33,7 @@
     (fn [evt]
       (when (= elem (->> evt .-target .-tagName .toLowerCase))
         (f evt))
-    false))) ; capture
+      false))) ; capture
 
 (defn fu [evt] (.log js/console (->> evt .-target .-parentElement .-parentElement)))
 
@@ -69,11 +66,11 @@
       (do
         (style/setStyle (by-id "search-results") "display" "none")
         (set! (.-value (by-id "search")) ""))
-    (if (<= 2 (count s))
-      (do
-        (style/setStyle (by-id "search-results") "display" "block")
-        (edn-call "/search" searched "POST" {:term s :offset 0 :limit 15}))
-      (style/setStyle (by-id "search-results") "display" "none")))))
+      (if (<= 2 (count s))
+        (do
+          (style/setStyle (by-id "search-results") "display" "block")
+          (edn-call "/search" searched "POST" {:term s :offset 0 :limit 15}))
+        (style/setStyle (by-id "search-results") "display" "none")))))
 
 (defn search-next [event]
   (let [s (.-value (by-id "search"))
