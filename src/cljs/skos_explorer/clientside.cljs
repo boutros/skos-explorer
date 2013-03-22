@@ -1,7 +1,7 @@
 (ns skos-explorer.clientside
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
-            [domina :refer [by-id by-class log set-value! attr remove-attr!
+            [domina :refer [by-id by-class log set-value! attr remove-attr! insert-before!
                             set-attr! remove-class! add-class! text set-text!]]
             [domina.events :refer [listen! raw-event target dispatch!
                                    prevent-default]]
@@ -124,6 +124,11 @@
     (remove-class! n "editing")
     (set-text! n original)))
 
+(defn label-add [event]
+  (insert-before! (.-parentElement (.-parentElement (target event)))
+                   "<li class=\"label editing\" contenteditable=\"true\" data-original-value=\"\" data-original-lang=\"no\">edit me!</li>"))
+
+
 (defn ^:export init []
   (log "Hallo der, mister Åsen.")
   (listen! (by-id "search") :keyup searching)
@@ -132,4 +137,5 @@
   (listen! (by-class "label") :focus label-focus)
   (listen! (by-class "label") :blur label-blur)
   (listen! (by-class "label") :keyup label-edit)
-  (listen! (by-class "label") :keydown label-edit))
+  (listen! (by-class "label") :keydown label-edit)
+  (listen! (by-class "add-label") :click label-add))
