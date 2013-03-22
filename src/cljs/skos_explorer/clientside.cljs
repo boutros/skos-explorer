@@ -2,11 +2,12 @@
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
             [domina :refer [by-id by-class log set-value! attr remove-attr! insert-before!
-                            set-attr! remove-class! add-class! text set-text!]]
+                            set-attr! remove-class! add-class! text set-text! has-class?]]
             [domina.events :refer [listen! raw-event target dispatch!
                                    prevent-default]]
             [goog.net.XhrIo :as xhr]
-            [goog.style :as style]))
+            [goog.style :as style]
+            [goog.events :as events]))
 
 ;(repl/connect "http://localhost:9000/repl")
 
@@ -25,15 +26,15 @@
            "</a></td></tr>"))))
 
 (defn live-listen!
-  "Listen on all elements in container, currently elem can only be a tag"
-  [container elem event-type f]
-  (.addEventListener
-    (.querySelector js/document container)
+  "Listen on all elements in container, currently elem can only be a clss"
+  [container cls event-type f]
+  (events/listen
+    (by-id container)
     (name event-type)
-    (fn [evt]
-      (when (= elem (->> evt .-target .-tagName .toLowerCase))
-        (f evt))
-      false))) ; capture
+    (fn [evt] (log "klkk"))
+    ;(when (has-class? (.-target evt) cls)
+    ; (f evt)
+    false)) ; capture
 
 (defn fu [evt] (.log js/console (->> evt .-target .-parentElement .-parentElement)))
 
@@ -87,8 +88,13 @@
 (defn label-focus [event]
   (let [n (target event)
         lang (attr n :data-original-lang)
-        original (attr n :data-original-value)]
-    (set-text! n (str \" original \" "@" lang))))
+        original (attr n :data-original-value)
+        rnge (.createRange js/document)
+        sel (.getSelection js/window)]
+    (set-text! n original)
+    (. rnge selectNodeContents n)
+    (. sel removeAllRanges)
+    (. sel addRange rnge)))
 
 (defn label-save [n value lang]
   (do
@@ -104,14 +110,13 @@
         keycode (.-keyCode (raw-event event))
         lang (attr n :data-original-lang)
         original (attr n :data-original-value)
-        edited-text (last (re-find #"\"(.+)\"" (text n))) ;"
-        edited-lang (last (re-find #"@(.+)$" (text n)))]
-    (if (= (text n) (str \" original \" "@" lang))
+        edited-text (text n)]
+    (if (= (text n) original)
       (remove-class! n "editing")
       (add-class! n "editing"))
     (when (= keycode 13)
       (prevent-default event)
-      (label-save n edited-text edited-lang))
+      (label-save n edited-text lang))
     (when (= keycode 27)
       (remove-class! n "editing")
       (set-text! n original)
@@ -125,8 +130,15 @@
     (set-text! n original)))
 
 (defn label-add [event]
-  (insert-before! (.-parentElement (.-parentElement (target event)))
-                   "<li class=\"label editing\" contenteditable=\"true\" data-original-value=\"\" data-original-lang=\"no\">edit me!</li>"))
+  (do
+    (insert-before! (.-parentElement (.-parentElement (target event)))
+                     (str "<li id=\"tmp\" class=\"label editing\" contenteditable=\"true\" data-original-value=\"edit me!\" "
+                          "data-original-lang=\"no\">edit me!</li>"))
+    (listen! (by-id "tmp") :blur label-blur)
+    (listen! (by-id "tmp") :focus label-focus)
+    (listen! (by-id "tmp") :keyup label-edit)
+    (listen! (by-id "tmp") :keydown label-edit)
+    (remove-attr! (by-id "tmp") "id")))
 
 
 (defn ^:export init []
