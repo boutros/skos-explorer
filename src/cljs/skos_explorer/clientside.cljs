@@ -25,19 +25,6 @@
            (get-in r [:_source :title])
            "</a></td></tr>"))))
 
-(defn live-listen!
-  "Listen on all elements in container, currently elem can only be a clss"
-  [container cls event-type f]
-  (events/listen
-    (by-id container)
-    (name event-type)
-    (fn [evt] (log "klkk"))
-    ;(when (has-class? (.-target evt) cls)
-    ; (f evt)
-    false)) ; capture
-
-(defn fu [evt] (.log js/console (->> evt .-target .-parentElement .-parentElement)))
-
 (defn edn-call
   [path callback method data]
   (xhr/send path
