@@ -2,7 +2,8 @@
   (:require [clojure.browser.repl :as repl]
             [cljs.reader :as reader]
             [domina :refer [by-id by-class log set-value! attr remove-attr! insert-before!
-                            set-attr! remove-class! add-class! text set-text! has-class?]]
+                            set-attr! remove-class! add-class! text set-text! has-class?
+                            destroy!]]
             [domina.events :refer [listen! raw-event target dispatch!
                                    prevent-default]]
             [goog.net.XhrIo :as xhr]
@@ -84,13 +85,17 @@
     (. sel addRange rnge)))
 
 (defn label-save [n value lang]
-  (do
-    ;(edn-call sparql update goes here)
-    (set-attr! n :data-original-value value)
-    (set-attr! n :data-original-lang lang)
-    (remove-class! n "editing")
-    (.focus (by-id"search"))
-    (.blur (by-id "search"))))
+  (if (= 0 (.-length value))
+    (do
+      ;(edn-call sparql delete goes here)
+      (destroy! n))
+    (do
+      ;(edn-call sparql update goes here)
+      (set-attr! n :data-original-value value)
+      (set-attr! n :data-original-lang lang)
+      (remove-class! n "editing")
+      (.focus (by-id"search"))
+      (.blur (by-id "search")))))
 
 (defn label-edit [event]
   (let [n (target event)
