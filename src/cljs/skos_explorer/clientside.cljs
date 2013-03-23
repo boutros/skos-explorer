@@ -130,6 +130,7 @@
     (listen! (by-id "tmp") :focus label-focus)
     (listen! (by-id "tmp") :keyup label-edit)
     (listen! (by-id "tmp") :keydown label-edit)
+    (.focus (by-id "tmp"))
     (remove-attr! (by-id "tmp") "id")))
 
 
