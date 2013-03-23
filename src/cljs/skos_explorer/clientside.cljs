@@ -119,7 +119,9 @@
   (let [n (target event)
         original (attr n :data-original-value)]
     (remove-class! n "editing")
-    (set-text! n original)))
+    (set-text! n original)
+    (when (= 0 (.-length original))
+      (destroy! n))))
 
 (defn label-add [event]
   (do
@@ -131,6 +133,7 @@
     (listen! (by-id "tmp") :keyup label-edit)
     (listen! (by-id "tmp") :keydown label-edit)
     (.focus (by-id "tmp"))
+    (set-attr! (by-id "tmp") "data-original-value" "")
     (remove-attr! (by-id "tmp") "id")))
 
 
