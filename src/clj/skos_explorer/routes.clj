@@ -10,7 +10,7 @@
   (:import java.net.URI))
 
 (defonce config
-  (read-string (slurp "resources/config.edn")))
+  (read-string (slurp (clojure.java.io/resource "config.edn"))))
 
 (defn generate-response [data & [status]]
   {:status (or status 200)

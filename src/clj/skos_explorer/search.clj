@@ -2,7 +2,7 @@
   (:require [clj-elasticsearch.client :refer [make-client search]]))
 
 (defonce config
-  (read-string (slurp "resources/config.edn")))
+  (read-string (slurp (clojure.java.io/resource "config.edn"))))
 
 (defonce es
   (make-client :transport {:hosts [(config :elastic-host)]

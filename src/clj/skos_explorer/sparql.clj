@@ -8,7 +8,7 @@
   (:import java.net.URI))
 
 (defonce config
-  (read-string (slurp "resources/config.edn")))
+  (read-string (slurp (clojure.java.io/resource "config.edn"))))
 
 (register-namespaces {:skos "<http://www.w3.org/2004/02/skos/core#>"
                       :dc "<http://purl.org/dc/terms/>"
