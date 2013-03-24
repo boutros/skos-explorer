@@ -73,6 +73,9 @@
       (graph (URI. (config :graph))
              (URI. concept) property [value lang]))))
 
+(defn update-query
+  [concept property oldval oldlang newval newlang]
+  "TODO")
 
 (defn fetch
   "Perform SPARQL query"

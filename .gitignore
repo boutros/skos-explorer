@@ -9,4 +9,5 @@ pom.xml
 *.jar
 *.class
 *.js
+*.log
 notater.txt

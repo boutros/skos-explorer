@@ -6,7 +6,8 @@
             [skos-explorer.views :as views]
             [skos-explorer.sparql :as sparql]
             [skos-explorer.search :as search]
-            [ring.middleware.edn :refer [wrap-edn-params]])
+            [ring.middleware.edn :refer [wrap-edn-params]]
+            [clj-log.core :refer [log]])
   (:import java.net.URI))
 
 (defonce config
@@ -19,6 +20,8 @@
 
 (defn dateformat [date]
   (.format (java.text.SimpleDateFormat. "HH:mm:ss") date))
+
+(defn now [] (dateformat (java.util.Date.)))
 
 (defroutes main-routes
   (GET "/"
@@ -45,13 +48,31 @@
         (generate-response (search/results term offset limit)))
   (PUT "/add"
        [concept property value lang]
-       (generate-response {:query (sparql/add-query concept (read-string property) value lang)
-                           :undo (sparql/delete-query concept (read-string property) value lang)
-                           :description (str "Label \"" value "\" added to concept." )
-                           :timestamp (dateformat (java.util.Date.))}))
+       (let [query (sparql/add-query concept (read-string property) value lang)
+             desc (str "Added " (last (re-find #"\[:(.*)\]" property ))
+                       " \"" value "\" to <" concept ">")
+             undo (sparql/delete-query concept (read-string property) value lang)
+             timestamp (now)]
+         (log :info {:event "sparql-update" :query query :undo undo :description desc})
+         (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
   (PUT "/update"
-       [concept property oldvalue newvalue lang]
-       (generate-response "OK!"))
+       [concept property oldv oldl newv newl]
+       (let [query (sparql/update-query concept (read-string property) oldv oldl newv newl)
+             desc (str "Changed " (last (re-find #"\[:(.*)\]" property )) " \""
+                       oldv "\" -> \"" newv "\" on <" concept ">")
+             undo (sparql/update-query concept (read-string property) newv newl oldv oldl)
+             timestamp (now)]
+         (log :info {:event "sparql-update" :query query :undo undo :description desc})
+         (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
+  (PUT "/delete"
+       [concept property value lang]
+       (let [query (sparql/delete-query concept (read-string property) value lang)
+             desc (str "Removed " (last (re-find #"\[:(.*)\]" property ))
+                       " \"" value "\" on <" concept ">")
+             undo (sparql/add-query concept (read-string property) value lang)
+             timestamp (now)]
+         (log :info {:event "sparql-update" :query query :undo undo :description desc})
+         (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
   (route/resources "/")
   (route/not-found "Page not found"))
 

@@ -91,21 +91,23 @@
     (. sel addRange rnge)))
 
 (defn label-save [n value lang]
-  (if (= 0 (.-length value))
-    (do
-      ;(edn-call sparql delete goes here)
-      (destroy! n))
-    (do
-      ;(edn-call sparql update goes here)
-      (let [uri (text (by-id "uri"))
-            property (-> n .-parentElement .-parentElement .-parentElement (attr "id"))]
-        (edn-call "/add"updated "PUT"
-                  {:concept uri :property property :value value :lang lang}))
-      (set-attr! n :data-original-value value)
-      (set-attr! n :data-original-lang lang)
-      (remove-class! n "editing")
-      (.focus (by-id"search"))
-      (.blur (by-id "search")))))
+  (let [uri (text (by-id "uri"))
+        property (-> n .-parentElement .-parentElement .-parentElement (attr "id"))
+        old-value (attr n :data-original-value)
+        old-lang (attr n :data-original-value)]
+    (if (= 0 (.-length value))
+      (do
+        (edn-call "/delete" updated "PUT" {:concept uri :property property :value old-value :lang old-lang})
+        (destroy! n))
+      (do
+        (if (= 0 (.-length old-value))
+          (edn-call "/add" updated "PUT" {:concept uri :property property :value value :lang lang})
+          (edn-call "/update" updated "PUT" {:concept uri :property property :oldv old-value :oldl old-lang :newv value :newl lang}))
+        (set-attr! n :data-original-value value)
+        (set-attr! n :data-original-lang lang)
+        (remove-class! n "editing")
+        (.focus (by-id"search"))
+        (.blur (by-id "search"))))))
 
 (defn label-edit [event]
   (let [n (target event)
