@@ -3,7 +3,7 @@
             [cljs.reader :as reader]
             [domina :refer [by-id by-class log set-value! attr remove-attr! insert-before!
                             set-attr! remove-class! add-class! text set-text! has-class?
-                            destroy!]]
+                            destroy! insert-after!]]
             [domina.events :refer [listen! raw-event target dispatch!
                                    prevent-default]]
             [goog.net.XhrIo :as xhr]
@@ -48,6 +48,12 @@
       (remove-attr! (by-id "search-prev") "disabled")
       (set-attr! (by-id "search-prev") "disabled"))))
 
+(defn updated [event]
+  (let [response (.-target event)
+        results (reader/read-string (.getResponseText response))]
+    (set-text! (by-id "logg-msg") (str "[" (results :timestamp) "] " (results :description)))
+    (style/setStyle (by-id "undo-link") "display" "inline")))
+
 (defn searching [event]
   (let [s (.-value (by-id "search"))
         keycode (.-keyCode (raw-event event))]
@@ -91,6 +97,10 @@
       (destroy! n))
     (do
       ;(edn-call sparql update goes here)
+      (let [uri (text (by-id "uri"))
+            property (-> n .-parentElement .-parentElement .-parentElement (attr "id"))]
+        (edn-call "/add"updated "PUT"
+                  {:concept uri :property property :value value :lang lang}))
       (set-attr! n :data-original-value value)
       (set-attr! n :data-original-lang lang)
       (remove-class! n "editing")

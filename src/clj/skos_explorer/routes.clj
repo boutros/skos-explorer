@@ -1,5 +1,5 @@
 (ns skos-explorer.routes
-  (:require [compojure.core :refer [GET POST defroutes]]
+  (:require [compojure.core :refer [GET POST PUT defroutes]]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [compojure.response :as response]
@@ -16,6 +16,9 @@
   {:status (or status 200)
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
+
+(defn dateformat [date]
+  (.format (java.text.SimpleDateFormat. "HH:mm:ss") date))
 
 (defroutes main-routes
   (GET "/"
@@ -40,6 +43,15 @@
   (POST "/search"
         [term offset limit]
         (generate-response (search/results term offset limit)))
+  (PUT "/add"
+       [concept property value lang]
+       (generate-response {:query (sparql/add-query concept (read-string property) value lang)
+                           :undo (sparql/delete-query concept (read-string property) value lang)
+                           :description (str "Label \"" value "\" added to concept." )
+                           :timestamp (dateformat (java.util.Date.))}))
+  (PUT "/update"
+       [concept property oldvalue newvalue lang]
+       (generate-response "OK!"))
   (route/resources "/")
   (route/not-found "Page not found"))
 

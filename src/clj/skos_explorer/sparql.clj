@@ -57,6 +57,23 @@
                   [:skos :prefLabel] :label
           (filter (lang-matches (lang :label) "en"))))
 
+(defn add-query
+  [concept property value lang]
+  (query
+    (base (URI. "http://www.w3.org/2004/02/skos/core#"))
+    (insert-data
+      (graph (URI. (config :graph))
+             (URI. concept) property [value lang]))))
+
+(defn delete-query
+  [concept property value lang]
+  (query
+    (base (URI. "http://www.w3.org/2004/02/skos/core#"))
+    (delete-data
+      (graph (URI. (config :graph))
+             (URI. concept) property [value lang]))))
+
+
 (defn fetch
   "Perform SPARQL query"
   [uri]
