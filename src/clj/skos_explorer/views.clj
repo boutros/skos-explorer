@@ -1,6 +1,12 @@
 (ns skos-explorer.views
   (:require [net.cgrand.enlive-html :as html]))
 
+(defn hours-format [date]
+  (.format (java.text.SimpleDateFormat. "HH:mm:ss") date))
+
+(defn date-format [date]
+  (.format (java.text.SimpleDateFormat. "yyyy-MM-DD HH:mm:ss") date))
+
 (defn links
   [linkmap uri label]
   (html/clone-for [n linkmap]
@@ -54,3 +60,17 @@
                                (html/content
                                  {:tag :a, :attrs {:href n}, :content n}))
   [:#logg-msg] (html/content (str "[" timestamp "] Concept loaded.")))
+
+(html/deftemplate log
+  "public/log.html"
+  [transactions]
+
+  [:#transactions :tr.logline]
+  (html/clone-for [n transactions]
+                  [:td.timestamp] (html/content (str "[" (-> n :time date-format)))
+                  [:a.uri] (html/do->
+                             (html/set-attr :href (str "/?uri="(-> n :message :concept)))
+                             (html/content (str "<"(-> n :message :concept) ">")))
+                  [:span.desc] (html/content (-> n :message :description))
+                  [:td.description :span.query] (html/content (-> n :message :query))
+                  [:td.undo :span.query] (html/content (-> n :message :undo))))
