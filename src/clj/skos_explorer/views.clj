@@ -67,7 +67,7 @@
 
   [:#transactions :tr.logline]
   (html/clone-for [n transactions]
-                  [:td.timestamp] (html/content (str "[" (-> n :time date-format)))
+                  [:td.timestamp] (html/content (-> n :time date-format))
                   [:a.uri] (html/do->
                              (html/set-attr :href (str "/?uri="(-> n :message :concept)))
                              (html/content (str "<"(-> n :message :concept) ">")))
