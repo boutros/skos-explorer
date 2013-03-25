@@ -96,8 +96,10 @@
         old-value (attr n :data-original-value)
         old-lang (attr n :data-original-value)]
     (if (= 0 (.-length value))
-      (do
-        (edn-call "/delete" updated "PUT" {:concept uri :property property :value old-value :lang old-lang})
+      (if (not= "" old-value)
+        (do
+          (edn-call "/delete" updated "PUT" {:concept uri :property property :value old-value :lang old-lang})
+          (destroy! n))
         (destroy! n))
       (do
         (if (= 0 (.-length old-value))
