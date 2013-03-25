@@ -41,8 +41,9 @@
              hidden (sparql/extract [:hiddenlabel] s2)
              narrower (sparql/extract [:narrower :narrowerlabel] s)
              broader (sparql/extract [:broader :broaderlabel] s)
-             related (sparql/extract [:related :relatedlabel] s)]
-         (views/concept uri b comments note scope example prefered alternate hidden narrower broader related topconcepts)))
+             related (sparql/extract [:related :relatedlabel] s)
+             timestamp (now)]
+         (views/concept uri b comments note scope example prefered alternate hidden narrower broader related topconcepts timestamp)))
   (POST "/search"
         [term offset limit]
         (generate-response (search/results term offset limit)))

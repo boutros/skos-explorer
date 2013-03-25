@@ -20,7 +20,7 @@
 
 (html/deftemplate concept
   "public/concept.html"
-  [uri bindings comments note scope example prefered alternate hidden narrower broader related topconcepts]
+  [uri bindings comments note scope example prefered alternate hidden narrower broader related topconcepts timestamp]
 
   [:#heading] (html/content (str
                 (if (some #(= (str uri) %) (map :concept topconcepts))
@@ -52,4 +52,5 @@
   [:#prefered :li.label] (labels prefered :preflabel)
   [:.links :p.link] (html/clone-for [n (bindings :link)]
                                (html/content
-                                 {:tag :a, :attrs {:href n}, :content n})))
+                                 {:tag :a, :attrs {:href n}, :content n}))
+  [:#logg-msg] (html/content (str "[" timestamp "] Concept loaded.")))
