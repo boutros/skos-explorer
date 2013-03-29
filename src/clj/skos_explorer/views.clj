@@ -5,7 +5,7 @@
   (.format (java.text.SimpleDateFormat. "HH:mm:ss") date))
 
 (defn date-format [date]
-  (.format (java.text.SimpleDateFormat. "yyyy-MM-DD HH:mm:ss") date))
+  (.format (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm:ss") date))
 
 (defn links
   [linkmap uri label]
