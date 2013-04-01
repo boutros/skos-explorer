@@ -51,7 +51,7 @@
        [concept property value lang]
        (let [query (sparql/add-query concept (read-string property) value (keyword lang))
              desc (str "Added " (last (re-find #"\[:(.*)\]" property )) " \"" value "\"")
-             undo (sparql/delete-query concept (read-string property) value lang)
+             undo (sparql/delete-query concept (read-string property) value (keyword lang))
              timestamp (now)]
          (sparql/publish-log concept desc query undo)
          (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
@@ -65,9 +65,9 @@
          (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
   (PUT "/delete"
        [concept property value lang]
-       (let [query (sparql/delete-query concept (read-string property) value lang)
+       (let [query (sparql/delete-query concept (read-string property) value (keyword lang))
              desc (str "Removed " (last (re-find #"\[:(.*)\]" property )) " \"" value "\"")
-             undo (sparql/add-query concept (read-string property) value lang)
+             undo (sparql/add-query concept (read-string property) value (keyword lang))
              timestamp (now)]
          (sparql/publish-log concept desc query undo)
          (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
