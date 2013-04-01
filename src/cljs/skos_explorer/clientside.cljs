@@ -6,7 +6,7 @@
             [goog.net.XhrIo :as xhr]
             [goog.style :as style]))
 
-;(repl/connect "http://localhost:9000/repl")
+(repl/connect "http://localhost:9000/repl")
 
 (defn search-results [results]
   (clojure.string/join
@@ -90,7 +90,7 @@
   (let [uri (dom/text (by-id "uri"))
         property (-> n .-parentElement .-parentElement .-parentElement (dom/attr "id"))
         old-value (dom/attr n :data-original-value)
-        old-lang (dom/attr n :data-original-value)]
+        old-lang (dom/attr n :data-original-lang)]
     (if (= 0 (.-length value))
       (if (not= "" old-value)
         (do
