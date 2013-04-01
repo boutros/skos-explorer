@@ -1,11 +1,14 @@
 (ns skos-explorer.views
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html]
+            [boutros.matsu.util :refer [pprint]]
+            [clj-time.coerce :refer [from-string]]
+            [clj-time.format :refer [unparse formatter]]))
 
 (defn hours-format [date]
   (.format (java.text.SimpleDateFormat. "HH:mm:ss") date))
 
-(defn date-format [date]
-  (.format (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm:ss") date))
+(def date-format
+  (formatter "yyyy-MM-dd HH:mm:ss"))
 
 (defn links
   [linkmap uri label]
@@ -63,14 +66,24 @@
 
 (html/deftemplate log
   "public/log.html"
-  [transactions]
+  [transactions uri]
+
+  [:.heading-text] (html/content
+          (if (seq uri) (str "Showing transactions for <" uri "> / ")
+            "Showing all transactions"))
+  [:.all-link] (when (seq uri)
+                (html/content
+                  {:tag :a :attrs {:href "/transactions"} :content "Show all"}))
 
   [:#transactions :tr.logline]
-  (html/clone-for [n transactions]
-                  [:td.timestamp] (html/content (-> n :time date-format))
+  (html/clone-for [log
+                   (if (seq uri)
+                      (filter #(= uri (get % :source)) transactions)
+                      transactions)]
+                  [:td.timestamp] (html/content (->> log :timestamp from-string (unparse date-format)));date-format))
                   [:a.uri] (html/do->
-                             (html/set-attr :href (str "/?uri="(-> n :message :concept)))
-                             (html/content (str "<"(-> n :message :concept) ">")))
-                  [:span.desc] (html/content (-> n :message :description))
-                  [:td.description :span.query] (html/content (-> n :message :query))
-                  [:td.undo :span.query] (html/content (-> n :message :undo))))
+                             (html/set-attr :href (str "/?uri="(-> log :source)))
+                             (html/content (str "<"(-> log :source) ">")))
+                  [:a.select] (html/set-attr :href (str "/transactions?uri=" (-> log :source)))
+                  [:span.desc] (html/content (-> log :message))
+                  [:td.description :pre.query] (html/content (->> log :query pprint))))

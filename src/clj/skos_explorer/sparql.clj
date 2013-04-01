@@ -2,9 +2,12 @@
   (:refer-clojure :exclude [filter concat group-by max min count])
   (:require [clj-http.client :as client]
             [boutros.matsu.sparql :refer :all]
+            [boutros.matsu.vendor.virtuoso :refer [modify insert-into]]
             [boutros.matsu.core :refer [register-namespaces]]
             [cheshire.core :refer [parse-string]]
-            [clojure.walk :refer [keywordize-keys]])
+            [clojure.walk :refer [keywordize-keys]]
+            [clj-time.core :refer [now]]
+            [clj-time.coerce :refer [to-long]])
   (:import java.net.URI))
 
 (defonce config
@@ -13,7 +16,46 @@
 (register-namespaces {:skos "<http://www.w3.org/2004/02/skos/core#>"
                       :dc "<http://purl.org/dc/terms/>"
                       :owl "<http://www.w3.org/2002/07/owl#>"
-                      :rdfs "<http://www.w3.org/2000/01/rdf-schema#>"})
+                      :rdfs "<http://www.w3.org/2000/01/rdf-schema#>"
+                      :log "<http://www.purl.org/logging#>"})
+
+(defn fetch
+  "Perform SPARQL query"
+  [q]
+  (client/get (config :endpoint)
+              (merge (config :http-options)
+                     {:query-params {"query" q
+                                     "format" "application/sparql-results+json"}})))
+
+(defn publish
+  "Perform SPARQL-UPDATE query"
+  [q]
+  (client/post (config :endpoint-update)
+               (merge (config :http-options)
+                      {:form-params {:query q }
+                       :digest-auth [(config :endpoint-user) (config :endpoint-password)]})))
+
+(defn log [source message q undo timestamp]
+  (let [uri (URI. (str (config :undo-uri) (to-long timestamp)))]
+    (query
+      (insert-into (URI. (config :undo-graph))
+                   uri a [:log :Event] \;
+                       [:log :source] (URI. source) \;
+                       [:log :message] message \;
+                       [:log :query] q \;
+                       [:log :undo] undo \;
+                       [:log :timestamp] timestamp))))
+
+(defquery transactions
+  (select :event :message :timestamp :query :undo :source)
+  (from (URI. (config :undo-graph)))
+  (where :event a [:log :Event] \;
+                [:log :source] :source \;
+                [:log :message] :message \;
+                [:log :query] :query \;
+                [:log :undo] :undo \;
+                [:log :timestamp] :timestamp)
+  (order-by (desc :timestamp)))
 
 (defn languages [v]
   (interpose || (for [l (config :languages)]
@@ -61,35 +103,35 @@
   [concept property value lang]
   (query
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
-    (insert-data
-      (graph (URI. (config :graph))
-             (URI. concept) property [value lang]))))
+    (modify (URI. (config :graph)))
+    (delete (URI. concept) [:dc :modified] :date )
+    (insert (URI. concept) property [value lang] \;
+                           [:dc :modified] (now))
+    (where
+      (URI. concept) [:dc :modified] :date)))
 
 (defn delete-query
   [concept property value lang]
   (query
     (base (URI. "http://www.w3.org/2004/02/skos/core#"))
-    (delete-data
-      (graph (URI. (config :graph))
-             (URI. concept) property [value lang]))))
+    (modify (URI. (config :graph)))
+    (delete (URI. concept) [:dc :modified] :date \;
+                           property [value lang])
+    (insert (URI. concept)[:dc :modified] (now))
+    (where (URI. concept) [:dc :modified] :date)))
 
 (defn update-query
   [concept property oldval oldlang newval newlang]
   "TODO")
 
-(defn fetch
-  "Perform SPARQL query"
-  [uri]
-  (client/get (config :endpoint)
-              {:query-params {"query" (concept uri)
-                              "format" "application/sparql-results+json"}}))
+(defn fetch-concept [uri] (fetch (concept uri)))
 
-(defn fetch-top-concepts
-  "Returns the URIs of skos:topConcept"
-  []
-  (client/get (config :endpoint)
-              {:query-params {"query" (query top-concepts)
-                              "format" "application/sparql-results+json"}}))
+(defn fetch-top-concepts [] (fetch (query top-concepts)))
+
+(defn fetch-transactions [] (fetch (query transactions)))
+
+(defn publish-log [source message q undo & [t]]
+  (publish (log source message q undo (or t (now)))))
 
 (defn bindings
   "Returns the bindings of a sparql/json response in a map with the binding

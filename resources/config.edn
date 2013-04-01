@@ -1,22 +1,18 @@
-; {
-;   :endpoint "http://localhost:8890/sparql"
-;   :dataset "http://id.loc.gov/authorities/subjects"
-;   :graph "http://localhost:8890/loc"
-;   :default-uri "http://id.loc.gov/authorities/subjects/sh99005029"
-;   :languages ["en"]
-;
-;   :elastic-host "localhost:9300"
-;   :elastic-cluster "elasticsearch"
-;   :elastic-index "concept"
-;   :elastic-type "loc"
-; }
-
 {
+  :http-options {:throw-exceptions true :debug true :debug-body true}
+
   :endpoint "http://localhost:8890/sparql"
+  :endpoint-update "http://localhost:8890/sparql-auth"
+  :endpoint-user "test"
+  :endpoint-password "secret"
+
   :dataset "http://vocabulary.curriculum.edu.au/scot"
   :graph "http://localhost:8890/skos"
+  :undo-graph "http://localhost:8890/skos/undo"
+  :undo-uri "http://localhost:8890/skos/undo/event/"
   :default-uri "http://vocabulary.curriculum.edu.au/scot/1028"
   :languages ["en" "no"]
+  :default-lang "no"
 
   :elastic-host "localhost:9300"
   :elastic-cluster "elasticsearch"

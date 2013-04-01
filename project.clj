@@ -9,7 +9,7 @@
                  [fogus/ring-edn "0.2.0-SNAPSHOT"]
                  [enlive "1.1.1"]
                  [clj-http "0.6.4"]
-                 [clj-log "0.4.5"]
+                 [clj-time "0.4.5"]
                  [cheshire "5.0.1"]
                  [matsu "0.1.1-SNAPSHOT"]
                  [domina "1.0.2-SNAPSHOT"]

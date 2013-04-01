@@ -94,15 +94,19 @@ img.arrow-h        { width: 100%; height: 10px;}
 #undo-link:hover   { text-decoration: underline; cursor: pointer;}
 
 #log-container     { margin: 1%;}
-#transactions      { font-family: monospace;}
+#transactions      { font-family: monospace; width:100%;}
 #transactions td   { padding: 4px; font-size:12px; vertical-align: top;}
 #transactions th   { font-size:13px;}
 #transactions td.timestamp { width: 135px;}
 #transactions tr.logline:nth-child(odd)  { background:#eee;}
 
-td.description, td.undo      { position: relative;}
-td.description:hover  > span { display: block; }
-td.undo:hover  > span        { display: block; }
-.query             { display: none; position: absolute; top:10px; left: -480px;
-                     width: 450px; background: #FFFF66; padding: 5px; z-index: 5000;
-                     border: 1px dashed #999;}
+.log-heading                { font-weight:bold; font-family: Arial; font-size: 18px; margin:4px;}
+tr.logline                  { position: relative;}
+td.concept                  { width: 330px;}
+td.undo                     { width: 50px; text-align: center;}
+td.description, td.undo     { }
+td.description:hover  > pre { display: block; }
+td.undo:hover  > pre        { display: block; }
+.query             { display: none; position: absolute; right: 20px;
+                     min-width: 500px; background: #FFFF66; padding: 5px; z-index: 5000;
+                     border: 1px dashed #999; text-align: left;}

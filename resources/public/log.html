@@ -12,21 +12,24 @@
   <body>
 
     <div id="log-container">
+      <div class="log-heading"><span class="heading-text">Showing all transactions</span><span class="all-link"></span></div>
+
       <table id="transactions">
-        <thead>
+<!--         <thead>
           <tr>
             <th>timestamp</th>
             <th>concept</th>
             <th>description</th>
             <th>undo</th>
           <tr>
-        </thead>
+        </thead> -->
         <tbody>
           <tr class="logline">
             <td class="timestamp"></td>
             <td class="concept"><a class="uri" href=""></a></td>
-            <td class="description"><span class="desc"></span><span class="query"></span></td>
-            <td class="undo"><a href="">undo</a><span class="query"></span></td>
+            <td class="undo"><a class="select" href="">select</a></td>
+            <td class="description"><span class="desc"></span><pre class="query"></pre></td>
+            <td class="undo"><a href="">undo</a></td>
           </tr>
         </tbody>
       </table>
