@@ -54,7 +54,6 @@
              undo (sparql/delete-query concept (read-string property) value lang)
              timestamp (now)]
          (sparql/publish-log concept desc query undo)
-         ;(sparql/publish-log concept {:event "sparql-update" :query (pprint query) :undo undo :description desc})
          (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
   (PUT "/update"
        [concept property oldv oldl newv newl]
@@ -70,7 +69,7 @@
              desc (str "Removed " (last (re-find #"\[:(.*)\]" property )) " \"" value "\"")
              undo (sparql/add-query concept (read-string property) value lang)
              timestamp (now)]
-         ;(log :info {:event "sparql-update" :query (pprint query) :undo (pprint undo) :description desc :concept concept})
+         (sparql/publish-log concept desc query undo)
          (generate-response {:query query :undo undo :description desc :timestamp timestamp})))
   (route/resources "/")
   (route/not-found "Page not found"))
